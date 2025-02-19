@@ -29,7 +29,7 @@ jobs:
       - name: Set Up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.2'
+          flutter-version: '3.29.0'
           channel: 'stable'
 
         #4 Install Dependencies
@@ -39,19 +39,6 @@ jobs:
        #6 Building APK
       - name: Build APK
         run: flutter build apk --release
-
-      #   #7 Building App Bundle (aab)
-      # - name: Build appBundle
-      #   run: flutter build appbundle
-
-      #   #8 Build IPA ( IOS Build )
-      # - name: Build IPA
-      #   run: flutter build ipa --no-codesign
-
-      # - name: Compress Archives and IPAs
-      #   run: |
-      #     cd build
-      #     tar -czf ios_build.tar.gz ios
 
         #9 Upload Artifacts
       - name: Upload Artifacts
