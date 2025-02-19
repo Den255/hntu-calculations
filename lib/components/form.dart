@@ -30,10 +30,9 @@ class _InputForm extends State<InputForm>{
           onPressed: () async {
             var form = context.read<FormModel>();
             if (form.checkValid()){
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Processing...')));
-              await form.calculate();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ResultsScreen()),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ResultsScreen(calcType: "bachelor")),
               );
             }else{
                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You have some wrong fields!')));

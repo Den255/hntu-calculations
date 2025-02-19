@@ -3,7 +3,8 @@ import 'package:hcalc/models/form_model.dart';
 import 'package:provider/provider.dart';
 
 class ResultsScreen extends StatefulWidget {
-  const ResultsScreen({super.key});
+  const ResultsScreen({super.key, required this.calcType});
+  final String calcType;
 
   @override
   State<ResultsScreen> createState() => _ResultsScreen();
@@ -14,9 +15,6 @@ class _ResultsScreen extends State<ResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var form = context.read<FormModel>().results;
-    form.sort((a, b) => (b.score.compareTo(a.score)));
-
     getCalcItem(name,calcStr){
       return Container(
         decoration: BoxDecoration(
@@ -45,29 +43,50 @@ class _ResultsScreen extends State<ResultsScreen> {
       }
     }
 
-    return Scaffold(
-      appBar: AppBar(title: Text("Results:")),
-      body: ListView.builder(
-        itemCount: form.length,
-        itemBuilder: (context, index) {
-          final item = form[index];
-          return ListTile(
-              contentPadding: EdgeInsets.all(4),
-              title: Container(
-                decoration: BoxDecoration(
-                  color: getColor(item.score)
-                ),
-                child: Row(
-                  children: [
-                    Expanded(flex: 5, child: Text(item.name)),
-                    Expanded(flex: 5, child: Text(item.score.toStringAsFixed(3))),
-                  ],
-                ),
-              ),
-              subtitle: Column(children: getCalcs(item)),
-            );
-        },
-      ),
+    var form = context.read<FormModel>();
+    return FutureBuilder<List<ResultItem>>(
+      future: form.calculate(widget.calcType),
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<List<ResultItem>> snapshot,
+      ) {
+        Scaffold sc;
+        if (snapshot.connectionState == ConnectionState.done) {
+          var results = snapshot.data!;
+          results.sort((a, b) => (b.score.compareTo(a.score)));
+          sc = Scaffold(
+            appBar: AppBar(title: Text("Results:")),
+            body: ListView.builder(
+              itemCount: results.length,
+              itemBuilder: (context, index) {
+                final item = results[index];
+                return ListTile(
+                  contentPadding: EdgeInsets.all(4),
+                  title: Container(
+                    decoration: BoxDecoration(color: getColor(item.score)),
+                    child: Row(
+                      children: [
+                        Expanded(flex: 5, child: Text(item.name)),
+                        Expanded(flex: 5, child: Text(item.score.toStringAsFixed(3))),
+                      ],
+                    ),
+                  ),
+                  subtitle: Column(children: getCalcs(item)),
+                );
+              },
+            ),
+          );
+        } else {
+          sc = Scaffold(
+            appBar: AppBar(title: Text("Waiting...")),
+            body: Container(
+              color: Colors.white,
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+        return sc;
+      },
     );
   }
 }

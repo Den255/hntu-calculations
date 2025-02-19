@@ -65,7 +65,15 @@ class FormModel extends ChangeNotifier {
     return !df.is_valid.values.contains(false);
   }
 
-  Future<void> calculate() async {
+  Future<List<ResultItem>> calculate(String calcType) async {
+    if (calcType == "master"){
+      return calculateMaster();
+    }else{
+      return calculateB();
+    }
+  }
+
+  Future<List<ResultItem>> calculateB() async {
     var response = await http.get(
       Uri.parse(
         "https://lyohha.github.io/KhNTU-Competitive-Grade-Calculator/coef.json",
@@ -142,9 +150,10 @@ class FormModel extends ChangeNotifier {
         results.add(ri);
       }
     }
+    return results;
   }
 
-  Future<void> calculateMaster() async {
+  Future<List<ResultItem>> calculateMaster() async {
     var response = await http.get(
       Uri.parse(
         "https://lyohha.github.io/KhNTU-Competitive-Grade-Calculator/master/coef.json",
@@ -185,6 +194,7 @@ class FormModel extends ChangeNotifier {
       ResultItem ri = ResultItem(el["name"], res, K, calculations);
       results.add(ri);
     }
+    return results;
   }
 }
 

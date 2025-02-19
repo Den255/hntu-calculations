@@ -34,10 +34,9 @@ class _MasterInputForm extends State<MasterInputForm> {
           onPressed: () async {
             var form = context.read<FormModel>();
             if (form.checkValid()){
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Processing...')));
-              await form.calculateMaster();
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ResultsScreen()),
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ResultsScreen(calcType: "master")),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('You have some wrong fields!')));
