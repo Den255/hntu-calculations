@@ -212,6 +212,8 @@ class ResultItem {
   List<Map> calculations = [
     {"name": "", "calc_string": ""},
   ];
+
+  bool isExpanded = false;
 }
 
 class DataForm {

@@ -30,6 +30,7 @@ class _InputForm extends State<InputForm>{
           onPressed: () async {
             var form = context.read<FormModel>();
             if (form.checkValid()){
+              await form.calculate("");
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ResultsScreen(calcType: "bachelor")),
